@@ -19,10 +19,10 @@ async function seed() {
   await dataSource.initialize();
   console.log('🌱 Iniciando seed...');
 
-  // Clear existing data
-  await dataSource.getRepository(Machine).delete({});
-  await dataSource.getRepository(User).delete({});
-  await dataSource.getRepository(Company).delete({});
+  // Clear existing data (em ordem para evitar erro de FK)
+  await dataSource.getRepository(Machine).createQueryBuilder().delete().execute();
+  await dataSource.getRepository(User).createQueryBuilder().delete().execute();
+  await dataSource.getRepository(Company).createQueryBuilder().delete().execute();
 
   // Create companies
   const company1 = await dataSource.getRepository(Company).save({
