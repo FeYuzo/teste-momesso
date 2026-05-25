@@ -1,0 +1,73 @@
+<div class="login-wrapper">
+  <div class="login-left">
+    <div class="brand">
+      <div class="brand-icon">M</div>
+      <span class="brand-name">Momesso</span>
+    </div>
+    <div class="tagline">
+      <h1>Gestão industrial<br><span>simplificada.</span></h1>
+      <p>Controle empresas, usuários e máquinas em um único painel seguro.</p>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><strong>100%</strong><span>Seguro</span></div>
+      <div class="stat"><strong>JWT</strong><span>Auth</span></div>
+      <div class="stat"><strong>RLS</strong><span>Políticas</span></div>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="login-card">
+      <h2>Entrar na plataforma</h2>
+      <p class="subtitle">Bem-vindo de volta. Insira suas credenciais.</p>
+
+      <form (ngSubmit)="onSubmit()" #f="ngForm">
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="seu@email.com"
+            autocomplete="email"
+            [class.error-input]="error()"
+          />
+        </div>
+
+        <div class="field">
+          <label for="password">Senha</label>
+          <input
+            id="password"
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            [class.error-input]="error()"
+          />
+        </div>
+
+        <div class="error-msg" *ngIf="error()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          {{ error() }}
+        </div>
+
+        <button type="submit" class="btn-login" [disabled]="loading()">
+          <span *ngIf="!loading()">Entrar</span>
+          <span *ngIf="loading()" class="spinner"></span>
+        </button>
+      </form>
+
+      <div class="demo-hint">
+        <p>Credenciais de demonstração:</p>
+        <div class="demo-chips">
+          <span class="chip admin" (click)="email='admin@momesso.com'; password='123456'">Admin</span>
+          <span class="chip user" (click)="email='joao@momesso.com'; password='123456'">User</span>
+        </div>
+        <small>Senha: <code>123456</code></small>
+      </div>
+    </div>
+  </div>
+</div>

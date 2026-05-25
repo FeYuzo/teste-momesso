@@ -1,0 +1,12 @@
+FROM node:20-alpine
+WORKDIR /app
+
+# Instala dependências incluindo devDependencies (ts-node necessário para seed)
+COPY package*.json ./
+RUN npm install
+
+# Copia todo o código-fonte
+COPY . .
+
+# Executa o seed via ts-node (compila e roda on-the-fly)
+CMD ["npx", "ts-node", "src/seeds/seed.ts"]

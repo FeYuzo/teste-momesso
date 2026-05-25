@@ -1,0 +1,110 @@
+<div class="dashboard">
+  <div class="page-header">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Bem-vindo, {{ authService.currentUser()?.name }}
+        <span class="badge" [class.admin]="authService.isAdmin()">{{ authService.currentUser()?.role }}</span>
+      </p>
+    </div>
+  </div>
+
+  <div *ngIf="loading()" class="loading-state">
+    <div class="spinner"></div>
+    <p>Carregando dados...</p>
+  </div>
+
+  <div *ngIf="!loading()">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card companies">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Empresas</span>
+          <strong class="stat-value">{{ stats().companies }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card users">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Usuários</span>
+          <strong class="stat-value">{{ stats().users }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card machines">
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Máquinas</span>
+          <strong class="stat-value">{{ stats().machines }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Data -->
+    <div class="tables-grid">
+      <div class="table-card">
+        <div class="table-header">
+          <h3>Últimos Usuários</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of recentUsers()">
+              <td>{{ user.name }}</td>
+              <td class="muted">{{ user.email }}</td>
+              <td>
+                <span class="badge" [class.admin]="user.role === 'ADMIN'">{{ user.role }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="recentUsers().length === 0" class="empty-state">Nenhum usuário encontrado</div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-header">
+          <h3>Últimas Máquinas</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Nº Série</th>
+              <th>Empresa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let m of recentMachines()">
+              <td>{{ m.name }}</td>
+              <td class="muted">{{ m.serialNumber }}</td>
+              <td class="muted">{{ m.company?.name || '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="recentMachines().length === 0" class="empty-state">Nenhuma máquina encontrada</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Máquinas</h1>
+      <p>Gerencie as máquinas cadastradas no sistema</p>
+    </div>
+    <button class="btn-primary" (click)="openCreate()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nova Máquina
+    </button>
+  </div>
+
+  <div class="toast" *ngIf="success()">{{ success() }}</div>
+
+  <div *ngIf="loading()" class="loading-state">
+    <div class="spinner"></div><p>Carregando...</p>
+  </div>
+
+  <div class="table-card" *ngIf="!loading()">
+    <table *ngIf="machines().length > 0">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Nº de Série</th>
+          <th>Empresa</th>
+          <th>Cadastro</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let m of machines()">
+          <td><strong>{{ m.name }}</strong></td>
+          <td class="mono">{{ m.serialNumber }}</td>
+          <td class="muted">{{ m.company?.name || '—' }}</td>
+          <td class="muted">{{ m.createdAt | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <div class="actions">
+              <button class="btn-icon edit" (click)="openEdit(m)" title="Editar">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button class="btn-icon delete" (click)="confirmDelete(m.id)" title="Excluir">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                  <path d="M10 11v6"/><path d="M14 11v6"/>
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="machines().length === 0" class="empty"><p>Nenhuma máquina encontrada</p></div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" *ngIf="showModal()" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ editingId ? 'Editar Máquina' : 'Nova Máquina' }}</h3>
+        <button class="modal-close" (click)="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>Nome da Máquina *</label>
+          <input type="text" [(ngModel)]="form.name" placeholder="Ex: Torno CNC Alpha" />
+        </div>
+        <div class="field">
+          <label>Número de Série *</label>
+          <input type="text" [(ngModel)]="form.serialNumber" placeholder="Ex: SN-001-XYZ" />
+        </div>
+        <div class="field" *ngIf="authService.isAdmin()">
+          <label>Empresa *</label>
+          <select [(ngModel)]="form.companyId">
+            <option value="" disabled>Selecione uma empresa</option>
+            <option *ngFor="let c of companies()" [value]="c.id">{{ c.name }}</option>
+          </select>
+        </div>
+        <div class="error-msg" *ngIf="error()">{{ error() }}</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button class="btn-primary" (click)="save()" [disabled]="saving()">
+          {{ saving() ? 'Salvando...' : (editingId ? 'Atualizar' : 'Criar') }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete confirm -->
+  <div class="modal-overlay" *ngIf="deleteConfirm()" (click)="cancelDelete()">
+    <div class="modal modal-sm" (click)="$event.stopPropagation()">
+      <div class="modal-header"><h3>Confirmar exclusão</h3></div>
+      <div class="modal-body"><p>Tem certeza que deseja excluir esta máquina?</p></div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="cancelDelete()">Cancelar</button>
+        <button class="btn-danger" (click)="doDelete()">Excluir</button>
+      </div>
+    </div>
+  </div>
+</div>
