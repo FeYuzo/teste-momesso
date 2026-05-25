@@ -74,7 +74,7 @@ momesso-project/
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/seu-usuario/momesso-project.git
+git clone https://github.com/FeYuzo/teste-momesso.git
 cd momesso-project
 
 # 2. Suba tudo (build + banco + seed automático)
